@@ -1,0 +1,28 @@
+{
+	"manifest_version": 2,
+	"name": "VKontakte UberBlock",
+	"version": "0.1.1",
+	"description": "__MSG_extDesc__",
+	"icons": {
+		"48": "icons/icon-48.png",
+		"96": "icons/icon-96.png",
+		"192": "icons/icon-192.png",
+		"384": "icons/icon-384.png"
+	},
+	"browser_action": {
+		"default_icon": "icons/icon-96.png",
+		"default_popup": "popup.html"
+	},
+	"author": "Saiv46",
+	"homepage_url": "https://vk.com/",
+	"permissions": ["storage", "https://api.vk.com/*"],
+	"content_scripts": [
+		{
+			"matches": ["https://vk.com/*"],
+			"js": ["page.js"]
+		}
+	],
+	"short_name": "VKUB",
+	"version_name": "0.1.2 BETA",
+	"default_locale": "en"
+}

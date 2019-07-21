@@ -1,0 +1,92 @@
+*, :before, :after {
+	-webkit-box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	box-sizing: border-box;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+}
+a {color: #333; transition: color, font-size .2s ease}
+html {overflow-x: hidden}
+
+:root {
+	--color: #484646;
+	--main-border: #E0E0E0;
+	--header-border: #757575;
+	--header-footer: #424242;
+	--background: #d5d5d5;
+}
+
+body {
+	background: #FAFAFA;
+	margin: 0;
+	font-family: Roboto, Sans-serif;
+	transition: background .86s ease;
+	overflow: hidden;
+	animation: body .5s ease .86s;
+	background: var(--background);
+	width: 380px;
+}
+
+header {
+	font-size: xx-large;
+	border-bottom: 1px solid var(--header-border);
+	background: #FFF;
+}
+
+header, footer {
+	color: var(--header-footer);
+	padding: .30em;
+	padding-left: 1.5em;
+}
+
+main {
+	display: flex;
+	margin: 1em;
+	padding: .1em;
+	background: #FFF;
+	border: 1px solid var(--main-border);
+	border-radius: 2px;
+	text-align: center;
+	justify-content: space-around;
+	flex-flow: row wrap;
+	align-items: center;
+	box-shadow: 0px 1px 3px 0px rgba(0, 0, 0, 0.32);
+	animation: main .86s ease
+}
+@keyframes main {
+    from {transform: translateY(9em); opacity: 0}
+    to {transform: translateY(0); opacity: 1}
+}
+
+ul {
+	margin: 1em auto;
+	padding: 0;
+}
+ul li {
+	display: inline-block;
+	padding: .1em 0;
+}
+ul a[href^="#unblock"] {
+	margin-left: .5em;
+}
+ul a[href^="#unblock"]::before {content: "[__MSG_unblock__]"}
+
+form {
+	padding: 1em;
+}
+form::before {content: "[__MSG_form__]:"}
+
+form input {
+	width: 100%;
+	margin: .5em 0;
+}
+form input, form button {
+	border: 1px #EEE solid;
+	border-radius: 3px;
+	padding: .5em;
+}
+
+noscript::before {content: "__MSG_noscript__"}
+form button::before {content: "[__MSG_block__]"}
+#version::before {content: "__MSG_version__ : "}
+#github::before {content: "__MSG_github__"}
