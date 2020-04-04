@@ -1,12 +1,37 @@
-if(window.chrome.runtime) window.browser = window.chrome;
-const promisify = func => (...args) => new Promise(res => func(...args, res));
+if (window.chrome.runtime) { window.browser = window.chrome }
+function promisify(func) { return (...args) => new Promise(res => func(...args, res)) }
+
+let storage = {
+	
+	async get (prop) {
+		if (!this._target) {
+			this._target = await promisify(browser.storage.local.get)(null)
+		}
+		return this._target[prop]
+	},
+	async set (prop, value) {
+		this._target[prop] = value
+		await promisify(browser.storage.local.set)(this._target)
+		if (browser.runtime.lastError) {
+			throw browser.runtime.lastError
+		}
+	},
+	async clear () {
+		
+	}
+})
+
+(async () => {
+	_storage = await promisify(browser.storage.local.get)()
+})()
+
 
 const storageGet = name => 
 	promisify(browser.storage.local.get)([ name ])
 	.then(v => v && v[name]);
 const storageSet = (name, value) => 
 	promisify(browser.storage.local.set)({[name]: value})
-	.then((_, v = browser.runtime.lastError) => { v && throw v });
+	.then(function(_) { let v = browser.runtime.lastError; if (v) throw v });
 
 const fetchMethod = async (method, params = {}) => {
 	params = Object.assign({access_token: 'f914f14af914f14af914f14a82f972b0aeff914f914f14aa2bc69adfcfb125d207cbfd3', v: 5.90}, params);
