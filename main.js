@@ -1,44 +1,32 @@
 if (window.chrome.runtime) { window.browser = window.chrome }
-function promisify(func) { return (...args) => new Promise(res => func(...args, res)) }
 
-let storage = {
-	
-	async get (prop) {
-		if (!this._target) {
-			this._target = await promisify(browser.storage.local.get)(null)
-		}
-		return this._target[prop]
-	},
-	async set (prop, value) {
-		this._target[prop] = value
-		await promisify(browser.storage.local.set)(this._target)
+function promisify (area) {
+	const call = func => (...args) => new Promise((res, rej) => {
+		func(...args, val => res(val))
 		if (browser.runtime.lastError) {
-			throw browser.runtime.lastError
+			rej(browser.runtime.lastError)
 		}
-	},
-	async clear () {
-		
-	}
-})
+	})
+	return new Proxy(area, {
+		get (target, prop) {
+			return typeof target[prop] === 'function'
+				? call(target[prop].bind(target))
+				: target[prop]
+		}
+	})
+}
 
-(async () => {
-	_storage = await promisify(browser.storage.local.get)()
-})()
-
-
-const storageGet = name => 
-	promisify(browser.storage.local.get)([ name ])
-	.then(v => v && v[name]);
-const storageSet = (name, value) => 
-	promisify(browser.storage.local.set)({[name]: value})
-	.then(function(_) { let v = browser.runtime.lastError; if (v) throw v });
+const storage = promisify(browser.storage.local)
 
 const fetchMethod = async (method, params = {}) => {
-	params = Object.assign({access_token: 'f914f14af914f14af914f14a82f972b0aeff914f914f14aa2bc69adfcfb125d207cbfd3', v: 5.90}, params);
+	params = Object.assign({
+		access_token: 'f914f14af914f14af914f14a82f972b0aeff914f914f14aa2bc69adfcfb125d207cbfd3',
+		v: 5.90
+	}, params);
 	const query = Object.entries(params).map(v => v.join("=")).join("&");
 	let data = await fetch(`https://api.vk.com/method/${method}?${query}`);
 	data = await data.json();
-	if(data.error) throw data.error;
+	if (data.error) throw data.error;
 	return data.response
 };
 
@@ -58,19 +46,22 @@ const fetchUserId = async url => {
 };
 
 window.UB = {
-	get blacklist() {
-		return storageGet('blacklist').catch(() => (UB.blacklist = []))
-	}, set blacklist(value) {
-		return storageSet('blacklist', value).then(() => value)
-	}, appendItem(id, update = true) {
+	get blacklist () {
+		return storage.get({ blacklist: [] }).then(v => v.blacklist)
+	}, set blacklist (value) {
+		return storage.set({ blacklist: value }).then(() => value)
+	}, appendItem (id, update = true) {
 		let li = document.createElement('li');
 		li.innerHTML = `... (@id${id})<a href="#unblock__${id}"></a>`;
-		if(update) fetchUsers([id]).then(v => {
-			li.innerHTML = `${v[0]} (@id${id})<a href="#unblock__${id}"></a>`;
-		});
+		if (update) {
+			fetchUsers([ id ])
+			.then(v => {
+				li.innerHTML = `${v[0]} (@id${id})<a href="#unblock__${id}"></a>`;
+			})
+		}
 		document.getElementById("banned").appendChild(li);
 		return id
-	}, removeItem(id) {
+	}, removeItem (id) {
 		return UB.blacklist.then(list => {
 			let i = list.indexOf(id);
 			if(!~i) throw "ID not found";
@@ -78,11 +69,9 @@ window.UB = {
 			UB.blacklist = list;
 			document.querySelector(`#banned :nth-child(${i+1})`).remove();
 		});
-	}, init() {
+	}, init () {
 		document.getElementById("version").innerText = browser.runtime.getManifest().version_name;
-		
 		document.getElementById("banned").innerHTML = "";
-		
 		UB.blacklist.then(async data => {
 			data.forEach(v => UB.appendItem(v, false));
 			(await fetchUsers(data)).forEach((v, i) => {
