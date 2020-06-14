@@ -17,16 +17,19 @@ function promisify (area) {
 }
 
 const storage = promisify(browser.storage.local)
+const errorMessage = chrome.i18n.getMessage("error") || "Error occured, open DevTools for info"
 
 const fetchMethod = async (method, params = {}) => {
 	params = Object.assign({
 		access_token: 'f914f14af914f14af914f14a82f972b0aeff914f914f14aa2bc69adfcfb125d207cbfd3',
-		v: 5.90
+		v: '5.110'
 	}, params);
 	const query = Object.entries(params).map(v => v.join("=")).join("&");
 	let data = await fetch(`https://api.vk.com/method/${method}?${query}`);
 	data = await data.json();
-	if (data.error) throw data.error;
+	if (data.error) {
+		throw new Error(`#${data.error.error_code}: ${data.error.error_msg}`);
+	}
 	return data.response
 };
 
@@ -64,7 +67,7 @@ window.UB = {
 	}, removeItem (id) {
 		return UB.blacklist.then(list => {
 			let i = list.indexOf(id);
-			if(!~i) throw "ID not found";
+			if(!~i) throw "Not found";
 			list.splice(i, 1);
 			UB.blacklist = list;
 			document.querySelector(`#banned :nth-child(${i+1})`).remove();
@@ -85,7 +88,7 @@ window.UB = {
 			UB.removeItem(parseInt(location.hash.substr(10)))
 			.catch(e => {
 				console.error(e);
-				alert("Error occured, open DevTools for into")
+				alert(errorMessage)
 			});
 		});
 		document.querySelector("form").onsubmit = e => {
@@ -96,8 +99,8 @@ window.UB = {
 				UB.appendItem(v);
 			})
 			.catch(e => {
-				console.error("Error occured", e);
-				alert(typeof e == "string" ? e : "Error occured, open DevTools for info");
+				console.error(e);
+				alert(typeof e == "string" ? e : errorMessage);
 			})
 			.then(() => {
 				document.querySelector("form input").value = "";

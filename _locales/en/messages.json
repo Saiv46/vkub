@@ -1,13 +1,10 @@
 {
 	"extDesc": {"message": "Use at your own risk blah-blah-blah... For those people that a blacklisting is not enough."},
-	
 	"block": {"message": "Block"},
 	"unblock": {"message": "Unblock"},
 	"form": {"message": "Page ID/URL"},
-	"disclaimer": {
-		"message": "This is BETA plugin and its not affiliated with VK.COM"
-	},
-	
+	"disclaimer": {"message": "This is BETA plugin and its not affiliated with VK.COM"},
+	"error": {"message": "Error occured, open DevTools for info"},
 	"version": {"message": "Version"},
 	"github": {"message": "Report a bug (GitHub)"},
 	"noscript": {"message": "You should enable JavaScript, dammit"}

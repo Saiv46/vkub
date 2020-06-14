@@ -1,13 +1,10 @@
 {
 	"extDesc": {"message": "Использовать на свой страх и риск бла-бла-бла... Для тех людей кому и ЧС мало."},
-	
 	"block": {"message": "Заблокировать"},
 	"unblock": {"message": "Разблокировать"},
 	"form": {"message": "ID/URL страницы"},
-	"disclaimer": {
-		"message": "Это плагин в БЕТЕ и он никоим образом не аффилирован с VK.COM"
-	},
-	
+	"disclaimer": {"message": "Это плагин в БЕТЕ и он никоим образом не аффилирован с VK.COM"},
+	"error": {"message": "Произошла ошибка, откройте DevTools для подробностей"},
 	"version": {"message": "Версия"},
 	"github": {"message": "Сообщить о баге (GitHub)"},
 	"noscript": {"message": "Вы должны были включить JavaScript, ё-маё"}
