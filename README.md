@@ -1,6 +1,6 @@
 # VKontake UberBlock (VKUB)
 
-### Status: Still in OPEN BETA
+### This repository is unmaintaned
 
 This is a extension designed to "extend" blacklist feature on VKontake.
 
